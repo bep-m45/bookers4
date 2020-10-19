@@ -26,7 +26,22 @@
              <tr>
               <td><%= attachment_image_tag user, :profile_image, :fill, 20, 20, format: 'jpeg', class: "img-circle pull-left profile-img", fallback: "no_image.jpg" %></td>
               <td><%= user.name %></td>
-              <td><%= link_to 'Show',user_path(user.id) %>
+              <td><%= link_to 'Show',user_path(user.id) %></td>
+              <td>
+                 <% if user != current_user %>
+                      <div id="follow_form">
+                        <% if current_user.following?(user) %>
+                            <%= form_for(current_user.active_relationships.find_by(followed_id: user.id), html: { method: :delete }) do |f| %>
+                              <%= f.submit "Unfollow", class: "btn" %>
+                        <% end %>
+                        <% else %>
+                           <%= form_for(current_user.active_relationships.build) do |f| %>
+                              <div><%= hidden_field_tag :followed_id, user.id %></div>
+                               <%= f.submit "Follow", class: "btn btn-primary" %>
+                        <% end %>
+                     <% end %>
+                      </div>
+                  <% end %>
               </td>
              </tr>
           <% end %>  

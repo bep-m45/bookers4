@@ -4,49 +4,54 @@
     <div class="user-headline">
         <h2>User info</h2>
         <%= attachment_image_tag user, :profile_image, :fill, 50, 50, format: 'jpeg', class: "img-circle pull-left profile-img", fallback: "no_image.jpg" %>
+           
            <table class="table">
                <thead>
                 <tr>
-                 <th></th>
-                 <th></th>
-                </tr>
-               </thead>
+                 <th>
+                   <% if user_signed_in? %>
+                     <% if user != current_user %>
+                      <div id="follow_form">
+                        <% if current_user.following?(user) %>
+                            <%= form_for(current_user.active_relationships.find_by(followed_id: user.id), html: { method: :delete }) do |f| %>
+                              <%= f.submit "Unfollow", class: "btn" %>
+                        <% end %>
+                        <% else %>
+                           <%= form_for(current_user.active_relationships.build) do |f| %>
+                              <div><%= hidden_field_tag :followed_id, user.id %></div>
+                               <%= f.submit "Follow", class: "btn btn-primary" %>
+                        <% end %>
+                     <% end %>
+                      </div>
+                  <% end %>
+                  <% end %>
+                </th>
+              </tr>
+             </thead>
              <tbody>
               <tr>
                <th>name</th>
-               <td><%= user.name %></td>
+                 <td><%= user.name %></td>
               </tr>
                <tr>
-               <th>introduction</th>
-              <td><%= user.introduction %></td>
+                 <th>introduction</th>
+                <td><%= user.introduction %></td>
               </tr>
               <tr>
-                <% user ||= current_user %>
-                <td>
-                   <div class="stats">
-                    <%=link_to user.following.count, following_user_path(user) %>
-                      <strong id="following" class="stat">
-                        followed
-                      </strong>
-                    </td>
-                  
+                <% user != current_user %>
+                   <th>followed</th>
                     <td>
-                   <%=link_to @user.followers.count, followers_user_path(user) %>
-                    <strong id="followers" class="stat">
-                    followers
-                    </strong>
-                    </td>   
-                   
-                  </div>
-              
-              </tr>
+                      <%=link_to user.following.count, following_user_path(user) %>
+                    </td>
+               </tr>
+              <tr>
+                  <th> followers</th>
+                     <td><%=link_to @user.followers.count, followers_user_path(user) %></td>
+               </tr>
              </tbody>
           </table>
-          
-        <div>
-          
 
-          
+        <div>
           <% if user.id == current_user.id %>
           <button type="button" class="text-center btn-light btn-lg btn-block" >
           <%= link_to "", edit_user_path(user.id), class:  "glyphicon glyphicon-wrench"%>
@@ -57,7 +62,7 @@
           </button>
           <% end %>
         </div>
-        
+
     </div>
 </div>
 

@@ -9,13 +9,11 @@
 
  <div class = "row">
      <div class="col-xs-3">
-     <% if user_signed_in? %>
-      <%= render 'follow_form', user: @user %>
-      <% end %>
      <%= render 'users/list', user: @user, book: @book %>
      </div>
   <div class="col-xs-9">
    <div class="book">
+    
     <h2>Books</h2>
       <table class="table">
        <thead>
@@ -23,6 +21,7 @@
         <th></th>
         <th>Title</th>
         <th>opinion</th>
+        <th></th>
       </tr>
       </thead>
       <tbody>
@@ -31,24 +30,19 @@
         <td><%= link_to attachment_image_tag(@user, :profile_image, :fill, 20, 20, format: 'jpeg', class: "img-circle pull-left profile-img", fallback: "no_image.jpg"), user_path(@user.id) %> </td>
         <td><%= link_to book.title, book_path(book) %></td>
         <td><%= book.body %></td>
+        
       </tr>
-    <% end %>
     </tbody>
      </table>
      <ol>
-
-
       <li>
        <i class="fa fa-comment"></i>
        <a href="#comments"><%= @book.book_comments.count %></a>
       </li>
      </ol>
+     <% end %>
    </div>
    </div>
   </div>
  </div>
- </div>
-
-
-
 </main>
